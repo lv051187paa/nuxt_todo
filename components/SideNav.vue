@@ -2,9 +2,25 @@
   <v-navigation-drawer
       fixed
       temporary
+      stateless
       :value="isSideNavVisible"
   >
     <v-list dense>
+      <v-list-tile avatar tag="div">
+        <v-list-tile-avatar>
+
+        </v-list-tile-avatar>
+
+        <v-list-tile-content>
+
+        </v-list-tile-content>
+
+        <v-list-tile-action @click="toggleSideNav">
+          <v-btn icon>
+            <v-icon>chevron_left</v-icon>
+          </v-btn>
+        </v-list-tile-action>
+      </v-list-tile>
       <v-list-tile
           v-for="item in items"
           :key="item.title"

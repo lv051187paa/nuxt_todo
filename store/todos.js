@@ -1,11 +1,19 @@
 const state = () => ({
   todos: [],
+  visible: [],
   loading: false,
+  pagination: {
+    total: 1,
+    active: 1,
+    perPage: 10
+  }
 });
 
 const getters = {
   allTodos: state => state.todos,
-  isLoadingTask: state => state.loading
+  todos: state => state.visible,
+  isLoadingTask: state => state.loading,
+  getPagination: state => state.pagination
 };
 
 const actions = {
@@ -21,33 +29,45 @@ const actions = {
     const response = await this.$axios.patch( `/todos/${todo.id}`, {...todo} );
     commit('editTodo', response.data);
   },
-  async storeTodo({commit}, title) {
+  async storeTodo({commit}, {title, fn}) {
+    commit('controlLoader', true);
     const response = await this.$axios.post( '/todos', {title, completed: false} );
     commit('saveTodo', response.data);
+    fn()
   },
   async toggletLoader({commit}, isLoading) {
     commit('controlLoader', isLoading);
   },
-  saveTodo({dispatch, commit}, title) {
-    return dispatch('toggletLoader', true).then(dispatch('storeTodo', title))
-  }
-
-
+  changePage({commit}, page){
+    commit('changePage', page)
+  },
 };
 
 const mutations = {
-  setTodos: (state, todos) => (state.todos = todos),
+  setTodos: (state, todos) => {
+    state.todos = todos;
+    const pageCount =
+    state.pagination.total = todos.length / state.pagination.perPage;
+    state.visible = todos.slice(0, state.pagination.perPage * state.pagination.active)
+  },
   deleteTodo: (state, id) => state.todos = state.todos.filter(todo => todo.id !== id),
   editTodo: (state, todo) => {
     const index = state.todos.findIndex(todoItem => todoItem.id === todo.id);
     state.todos.splice(index, 1, todo)
   },
   saveTodo: (state, todo) => {
-    state.todos.unshift(todo)
+    state.todos.unshift(todo);
+    state.loading = false;
   },
   controlLoader: (state, isLoading) => {
     state.loading = isLoading;
-  }
+  },
+  changePage: (state, page) => {
+    console.log(page)
+    state.pagination.active = page
+    state.visible = state.todos.slice((page - 1) * state.pagination.perPage, state.pagination.perPage * page)
+  },
+
 };
 
 export default {

@@ -1,20 +1,23 @@
 <template>
   <v-container>
-    <TodoItem v-for="todo in allTodos"
+    <TodoItem v-for="todo in todos"
               :key="todo.id"
               :todo="todo"
     />
+    <Pagination v-if="allTodos.length" />
   </v-container>
 </template>
 
 <script>
   import TodoItem from './TodoItem.vue';
+  import Pagination from './Pagination.vue';
   import { mapGetters, mapActions } from 'vuex';
 
   export default {
     name: "TodoList",
     components: {
-      TodoItem
+      TodoItem,
+      Pagination
     },
     data () {
       return {
@@ -26,7 +29,7 @@
 
     },
     computed: {
-      ...mapGetters( {allTodos: 'todos/allTodos'} )
+      ...mapGetters( {allTodos: 'todos/allTodos',  todos: 'todos/todos'} )
     },
     created () {
       this.fetchTodos();
