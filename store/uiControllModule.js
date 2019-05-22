@@ -1,21 +1,22 @@
+import uiGetters from './uiControllModule/getters';
+import uiActions from './uiControllModule/acions';
+import uiMutations from './uiControllModule/mutations';
+
 const state = () => ({
   sideNavVisible: false,
   searchBarVisible: false,
 });
 
 const getters = {
-  isSideNavVisible: state => state.sideNavVisible,
-  isSerchBarVisible: state => state.searchBarVisible,
+  ...uiGetters
 };
 
 const actions = {
-  toggleSideNav({commit}){
-    commit('toggleSideNav')
-  }
+  ...uiActions
 };
 
 const mutations = {
-  toggleSideNav: state => state.sideNavVisible = !state.sideNavVisible
+  ...uiMutations
 };
 
 export default {
